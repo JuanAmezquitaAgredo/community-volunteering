@@ -1,4 +1,6 @@
+'use client'
 import Button from "@/ui/atoms/button";
+import { useRouter } from "next/navigation";
 import styled from "styled-components"
 
 const HeaderHomePageComponent = styled.header`
@@ -50,14 +52,19 @@ const ButtonRegister = styled(Button)`
 
 
 export default function HeaderHomePage() {
+    const router = useRouter();
 
+    const handleClickLogin = () => {
+        router.push("/login");
+    }
+    
     return (
         <HeaderHomePageComponent>
             <Title>
                 VolunteerConnect
             </Title>
             <ButtonsContainer>
-                <ButtonLogin label="Iniciar Sesion" />
+                <ButtonLogin label="Iniciar Sesion" onClick={handleClickLogin} />
                 <ButtonRegister label="Regístrarse" />
             </ButtonsContainer>
         </HeaderHomePageComponent>

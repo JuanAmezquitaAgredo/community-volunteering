@@ -25,7 +25,7 @@ const Label = styled.label`
     font-size: 0.875rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: #D4AF37
+    color: #202020
 `;
 
 export const FormField = <T extends FieldValues>({

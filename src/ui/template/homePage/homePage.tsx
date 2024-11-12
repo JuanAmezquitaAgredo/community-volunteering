@@ -1,7 +1,7 @@
 'use client'
+import BodyHomePage from "@/ui/organisms/homePage/body";
+import HeaderHomePage from "@/ui/organisms/homePage/header";
 import styled from "styled-components"
-import HeaderHomePage from "../organisms/homePage/header";
-import BodyHomePage from "../organisms/homePage/body";
 
 const PageContainer = styled.div`
   width: 100;
