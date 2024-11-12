@@ -4,13 +4,16 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 interface AuthToken {
     id?: string;
+    role?: string;
+    photo?: string;
     token?: string;
 }
 
 interface AuthUser {
-    id: string;
-    name: string;
     email: string;
+    id: string;
+    role: string;
+    photo: string;
     token: string;
 }
 
@@ -18,9 +21,9 @@ interface CustomSession extends Session {
     user: {
         id?: string;
         token?: string;
-        name?: string | null;
+        role?: string | null;
         email?: string | null;
-        image?: string | null;
+        photo?: string | null;
     };
 }
 
@@ -47,10 +50,13 @@ export const authOptions: NextAuthOptions = {
                     const authService = new AuthService();
                     const response = await authService.login(loginRequest);
 
+                    const idString: string = response.data.user.sub.toString();
+
                     return {
-                        email: loginRequest.email,
-                        id: loginRequest.email,
-                        name: loginRequest.email,
+                        email: response.data.user.email,
+                        id: idString,
+                        role: response.data.user.role,
+                        photo: response.data.user.photo,
                         token: response.data.access_token,
                     } as AuthUser;
                 } catch (error) {
@@ -62,6 +68,7 @@ export const authOptions: NextAuthOptions = {
     ],
     session: {
         strategy: "jwt",
+        maxAge: 10 * 60,
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
@@ -69,6 +76,8 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 const authUser = user as AuthUser;
                 token.id = authUser.id;
+                token.role = authUser.role;
+                token.photo = authUser.photo;
                 token.token = authUser.token;
             }
             return token;
@@ -76,6 +85,8 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             const customSession = session as CustomSession;
             customSession.user.id = (token as AuthToken).id;
+            customSession.user.role = (token as AuthToken).role;
+            customSession.user.photo = (token as AuthToken).photo;
             customSession.user.token = (token as AuthToken).token;
             return customSession;
         },
