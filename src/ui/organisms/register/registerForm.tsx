@@ -87,7 +87,7 @@ const RegisterForm = () => {
             if (!response.ok) {
                 throw new Error("Error al registrar el servicio");
             }
-            alert('Servicio registrado exitosamente');
+            alert('Usuario registrado exitosamente');
             router.refresh();
             return await response.json();
 
