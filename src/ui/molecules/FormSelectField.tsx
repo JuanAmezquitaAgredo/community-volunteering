@@ -13,7 +13,7 @@ interface IpropsFormSelectField<T extends FieldValues> {
 }
 
 const FormSelectFieldContainer = styled.div`
-    width: 100%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
