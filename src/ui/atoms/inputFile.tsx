@@ -4,6 +4,7 @@ interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
     placeholder?: string;
     error?: string;
     name?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Añadimos onChange personalizado
 }
 
 const StyledLabel = styled.label<{ $error?: string }>`
@@ -34,17 +35,26 @@ const ErrorText = styled.p`
 
 const InputFile = ({
     placeholder = "Selecciona un archivo",
+    type = "file",
     error,
     name,
+    onChange,
     ...props
 }: InputFileProps) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onChange) {
+            onChange(e);
+        }
+    };
+
     return (
         <div>
             <StyledLabel $error={error}>
                 {placeholder}
                 <HiddenInput
-                    type="file"
+                    type={type}
                     name={name}
+                    onChange={handleFileChange} 
                     {...props}
                 />
             </StyledLabel>

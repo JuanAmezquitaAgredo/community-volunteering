@@ -30,9 +30,6 @@ const registerSchema = yup.object().shape({
         .mixed<File>()
         .nullable()
         .notRequired()
-        .test('is-file', 'Debe ser un archivo válido', (value) => {
-            return value === undefined || value instanceof File;
-        })
 });
 
 const FormContainer = styled.form`
@@ -90,8 +87,6 @@ const RegisterForm = () => {
             if (!response.ok) {
                 throw new Error("Error al registrar el servicio");
             }
-
-            console.log(formData);
             alert('Servicio registrado exitosamente');
             router.refresh();
             return await response.json();
@@ -152,7 +147,6 @@ const RegisterForm = () => {
                     name="photo"
                     label="Foto de Perfil"
                     error={errors.photo}
-                    placeholder="Subir Foto de Perfil"
                 />
             </InputsSelects>
             <Button type="submit" label="Registrarse" />

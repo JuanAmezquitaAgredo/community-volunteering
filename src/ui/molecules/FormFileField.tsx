@@ -1,28 +1,49 @@
+"use client";
+
 import { Control, Controller, FieldError, FieldValues, Path } from "react-hook-form";
 import styled from "styled-components";
-import InputFile from "../atoms/inputFile";
 
-interface IpropsFormFileField<T extends FieldValues> {
+interface IPropsSelectFile<T extends FieldValues> {
     label: string;
     name: Path<T>;
     control: Control<T>;
     error?: FieldError;
     id?: string;
-    placeholder?: string;
+    accept?: string;
 }
 
 const FormFileFieldContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
 `;
 
 const Label = styled.label`
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: #202020;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #202020;
+`;
+
+const StyledInput = styled.input<{ hasError?: boolean }>`
+  border: 1px solid ${({ hasError }) => (hasError ? "#f08484" : "#e2e8f0")};
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #202020;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+    border-color: #4299e1;
+  }
+`;
+
+const ErrorText = styled.span`
+  color: #f79393;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
 `;
 
 export const FormFileField = <T extends FieldValues>({
@@ -31,8 +52,8 @@ export const FormFileField = <T extends FieldValues>({
     control,
     error,
     id,
-    placeholder,
-}: IpropsFormFileField<T>) => {
+    accept,
+}: IPropsSelectFile<T>) => {
     return (
         <FormFileFieldContainer>
             <Label htmlFor={id || label.toLowerCase()}>{label}</Label>
@@ -40,18 +61,16 @@ export const FormFileField = <T extends FieldValues>({
                 name={name}
                 control={control}
                 render={({ field }) => (
-                    <InputFile
+                    <StyledInput
+                        type="file"
                         id={id || label.toLowerCase()}
-                        error={error?.message}
-                        placeholder={placeholder || `Sube tu ${label.toLowerCase()}`}
+                        hasError={!!error}
                         {...field}
-                        onChange={(e) => {
-                            field.onChange(e.target.files ? e.target.files[0] : null);
-                        }}
+                        accept={accept}
                     />
                 )}
             />
-            {error && <p style={{ color: "#f79393", fontSize: "12px", marginTop: "5px" }}>{error.message}</p>}
+            {error && <ErrorText>{error.message}</ErrorText>}
         </FormFileFieldContainer>
     );
 };
