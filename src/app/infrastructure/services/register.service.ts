@@ -8,10 +8,12 @@ export class RegisterService implements PRegister{
         this.clientHttp = new HttpClient();
     }
 
-    async register(req: IRegisterRequest): Promise<IRegisterResponse>{
-        return this.clientHttp.post<IRegisterResponse, IRegisterRequest>(
-            `/users`,
-            req
+    async register(req: FormData): Promise<IRegisterResponse>{
+        const formData = true;
+        return this.clientHttp.post<IRegisterResponse, FormData>(
+            `users`,
+            req,
+            formData
         );
     }
 }

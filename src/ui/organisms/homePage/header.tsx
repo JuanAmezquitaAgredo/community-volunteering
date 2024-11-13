@@ -57,6 +57,10 @@ export default function HeaderHomePage() {
     const handleClickLogin = () => {
         router.push("/login");
     }
+
+    const handleClickregister = () => {
+        router.push("/register");
+    }
     
     return (
         <HeaderHomePageComponent>
@@ -65,7 +69,7 @@ export default function HeaderHomePage() {
             </Title>
             <ButtonsContainer>
                 <ButtonLogin label="Iniciar Sesion" onClick={handleClickLogin} />
-                <ButtonRegister label="Regístrarse" />
+                <ButtonRegister label="Regístrarse" onClick={handleClickregister} />
             </ButtonsContainer>
         </HeaderHomePageComponent>
     )

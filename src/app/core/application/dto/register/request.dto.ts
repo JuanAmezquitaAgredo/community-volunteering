@@ -3,5 +3,5 @@ interface IRegisterRequest {
     password: string;
     name: string;
     role: string;
-    photo: string;
+    photo?: File | null;
 }

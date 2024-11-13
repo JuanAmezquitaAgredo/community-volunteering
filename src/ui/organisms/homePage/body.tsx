@@ -1,4 +1,5 @@
 import Button from "@/ui/atoms/button";
+import { useRouter } from "next/navigation";
 import styled from "styled-components"
 
 
@@ -56,6 +57,11 @@ const ButtonOrganizator = styled(Button)`
 
 export default function BodyHomePage() {
 
+    const router = useRouter();
+    const handleClickLogin = () => {
+        router.push("/login");
+    }
+
     return(
         <BodyHomePageComponent>
             <Title>
@@ -66,7 +72,7 @@ export default function BodyHomePage() {
             </Paragraph>
             <Buttons>
                 <ButtonProyect label="Explorar Proyectos"/>
-                <ButtonOrganizator label="Comenzar como Organizador"/>
+                <ButtonOrganizator label="Comenzar como Organizador" onClick={handleClickLogin}/>
             </Buttons>
         </BodyHomePageComponent>
     )

@@ -1,18 +1,17 @@
-import InputSelect from "@/ui/atoms/InputSelect";
 import { Control, Controller, FieldError, FieldValues, Path } from "react-hook-form";
 import styled from "styled-components";
+import InputFile from "../atoms/inputFile";
 
-interface IpropsFormSelectField<T extends FieldValues> {
+interface IpropsFormFileField<T extends FieldValues> {
     label: string;
     name: Path<T>;
     control: Control<T>;
     error?: FieldError;
     id?: string;
     placeholder?: string;
-    options: { value: string, label: string }[];
 }
 
-const FormSelectFieldContainer = styled.div`
+const FormFileFieldContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -26,31 +25,33 @@ const Label = styled.label`
     color: #202020;
 `;
 
-export const FormSelectField = <T extends FieldValues>({
+export const FormFileField = <T extends FieldValues>({
     label,
     name,
     control,
     error,
     id,
     placeholder,
-    options,
-}: IpropsFormSelectField<T>) => {
-    return(
-        <FormSelectFieldContainer>
+}: IpropsFormFileField<T>) => {
+    return (
+        <FormFileFieldContainer>
             <Label htmlFor={id || label.toLowerCase()}>{label}</Label>
             <Controller
                 name={name}
                 control={control}
                 render={({ field }) => (
-                    <InputSelect
+                    <InputFile
                         id={id || label.toLowerCase()}
                         error={error?.message}
-                        options={options}
-                        placeholder={placeholder || `Ingrese su ${label.toLowerCase()}`}
+                        placeholder={placeholder || `Sube tu ${label.toLowerCase()}`}
                         {...field}
+                        onChange={(e) => {
+                            field.onChange(e.target.files ? e.target.files[0] : null);
+                        }}
                     />
                 )}
             />
-        </FormSelectFieldContainer>
-    )
-}
+            {error && <p style={{ color: "#f79393", fontSize: "12px", marginTop: "5px" }}>{error.message}</p>}
+        </FormFileFieldContainer>
+    );
+};
