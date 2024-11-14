@@ -27,4 +27,24 @@ export class ProjectsServices implements PProjects{
             throw error;
           }
     }
+
+    async updateProject(id:number, project: IEditProjectsRequest): Promise<IEditProjectsResponse>{
+       try {
+            const response = this.clientHttp.put<IEditProjectsResponse, IEditProjectsRequest>(`projects/${id}`, project);
+            return response;
+          } catch (error) {
+            console.log(error);
+            throw error;
+          }
+    }
+
+    async deleteProject(id:number): Promise<IDeleteProjectResponse>{
+       try {
+            const response = this.clientHttp.delete<IDeleteProjectResponse>(`projects/${id}`);
+            return response;
+          } catch (error) {
+            console.log(error);
+            throw error;
+          }
+    }
 }
