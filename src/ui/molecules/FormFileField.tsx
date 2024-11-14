@@ -4,12 +4,12 @@ import { Control, Controller, FieldError, FieldValues, Path } from "react-hook-f
 import styled from "styled-components";
 
 interface IPropsSelectFile<T extends FieldValues> {
-    label: string;
-    name: Path<T>;
-    control: Control<T>;
-    error?: FieldError;
-    id?: string;
-    accept?: string;
+  label: string;
+  name: Path<T>;
+  control: Control<T>;
+  error?: FieldError;
+  id?: string;
+  accept?: string;
 }
 
 const FormFileFieldContainer = styled.div`
@@ -47,30 +47,33 @@ const ErrorText = styled.span`
 `;
 
 export const FormFileField = <T extends FieldValues>({
-    label,
-    name,
-    control,
-    error,
-    id,
-    accept,
+  label,
+  name,
+  control,
+  error,
+  id,
+  accept,
 }: IPropsSelectFile<T>) => {
-    return (
-        <FormFileFieldContainer>
-            <Label htmlFor={id || label.toLowerCase()}>{label}</Label>
-            <Controller
-                name={name}
-                control={control}
-                render={({ field }) => (
-                    <StyledInput
-                        type="file"
-                        id={id || label.toLowerCase()}
-                        hasError={!!error}
-                        {...field}
-                        accept={accept}
-                    />
-                )}
-            />
-            {error && <ErrorText>{error.message}</ErrorText>}
-        </FormFileFieldContainer>
-    );
+  return (
+    <FormFileFieldContainer>
+      <Label htmlFor={id || label.toLowerCase()}>{label}</Label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <StyledInput
+            type="file"
+            id={id || label.toLowerCase()}
+            hasError={!!error}
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              field.onChange(file); 
+            }}
+            accept={accept}
+          />
+        )}
+      />
+      {error && <ErrorText>{error.message}</ErrorText>}
+    </FormFileFieldContainer>
+  );
 };

@@ -75,10 +75,12 @@ const RegisterForm = () => {
             formData.append("name", data.name);
             formData.append("role", data.role);
 
-            if (data.photo) {
+            if (data.photo instanceof File) {
                 formData.append("photo", data.photo);
+            } else {
+                console.warn("La imagen no es un archivo válido");
             }
-
+            
             const response = await fetch("/api/users/post", {
                 method: "POST",
                 body: formData
@@ -89,6 +91,7 @@ const RegisterForm = () => {
             }
             alert('Usuario registrado exitosamente');
             router.refresh();
+            console.log(response);
             return await response.json();
 
         } catch (error) {
