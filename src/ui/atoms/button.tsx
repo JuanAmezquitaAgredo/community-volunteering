@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label?: string;
-    type?: 'button' |'submit' |'reset';
+    icon?: React.ReactNode;
+    type?: 'button' | 'submit' | 'reset';
     onClick?: () => void;
 }
 
@@ -16,20 +17,31 @@ const StyledButton = styled.button`
     transition: background-color 0.3s ease;
     text-align: center;
     cursor: pointer;
+    display: flex;         
+    align-items: center;
+    justify-content: center;
 
     &:hover {
         background-color: #545454;
     }
 `;
 
+const IconWrapper = styled.span`
+    margin-right: 0.5rem;  
+    display: flex;
+    align-items: center;
+`;
+
 const Button = ({
     label,
-    type,
+    icon,
+    type = 'button',
     onClick,
-   ...props
+    ...props
 }: ButtonProps) => {
-    return(
+    return (
         <StyledButton type={type} onClick={onClick} {...props}>
+            {icon && <IconWrapper>{icon}</IconWrapper>}
             {label}
         </StyledButton>
     );

@@ -17,7 +17,7 @@ interface AuthUser {
     token: string;
 }
 
-interface CustomSession extends Session {
+export interface CustomSession extends Session {
     user: {
         id?: string;
         token?: string;
