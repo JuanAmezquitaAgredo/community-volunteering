@@ -2,21 +2,23 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/ui/atoms/button";
-import FormField from "@/ui/molecules/common/FormField";
 import styled from "styled-components";
 import * as yup from "yup";
 import Loading from "@/ui/atoms/loading";
 import { useRouter } from "next/navigation";
+import FormField from "@/ui/molecules/FormField";
 
 interface Iprops {
     onClose: () => void;
     Id: number;
 }
 
-const registerSchema = yup.object().shape({
-    name: yup.string().min(1, 'El nombre debe tener al menos 1 carácter').required('Nombre del servicio requerido'),
+// Definimos el esquema de validación para los proyectos
+const editProjectSchema = yup.object().shape({
+    title: yup.string().min(1, 'El título debe tener al menos 1 carácter').required('Título del proyecto requerido'),
     description: yup.string().min(1, 'La descripción debe tener al menos 1 carácter').required('Descripción requerida'),
-    price: yup.number().min(10, 'El valor mínimo es 10').required('Precio requerido')
+    startDate: yup.string().required('Fecha de inicio requerida'),
+    endDate: yup.string().required('Fecha de finalización requerida')
 });
 
 const FormContainer = styled.form`
@@ -33,50 +35,52 @@ const Title = styled.h2`
   font-size: 1.5rem;
   font-weight: 600;
   text-align: center;
-  color: #D4AF37;
+  color: black;
 `;
 
 const EditForm = ({ onClose, Id }: Iprops) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const { control, handleSubmit: onSubmit, setValue, formState: { errors } } = useForm<IEditServiceRequest>({
+    const { control, handleSubmit: onSubmit, setValue, formState: { errors } } = useForm<IEditProjectsRequest>({
         mode: "onChange",
-        resolver: yupResolver(registerSchema),
+        resolver: yupResolver(editProjectSchema),
     });
 
     useEffect(() => {
-        const fetchServiceData = async () => {
+        const fetchProjectData = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`/api/services/getservice/${Id}`);
+                const response = await fetch(`/api/projects/getproject/${Id}`);
                 const data = await response.json();
-                setValue("name", data.name);
-                setValue("description", data.description);
-                setValue("price", data.price);
+                const project = data.data;
+                setValue("title", project.title);
+                setValue("description", project.description);
+                setValue("startDate", project.startDate);
+                setValue("endDate", project.endDate);
             } catch (error) {
-                console.error("Error fetching service data:", error);
+                console.error("Error fetching project data:", error);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchServiceData();
+        fetchProjectData();
     }, [Id, setValue]);
 
-    const handleEdit = async (data: IEditServiceRequest) => {
+    const handleEdit = async (data: IEditProjectsRequest) => {
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/services/edit/${Id}`, {
+            const response = await fetch(`/api/projects/edit/${Id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
 
             if (!response.ok) {
-                throw new Error("Error al actualizar el servicio");
+                throw new Error("Error al actualizar el proyecto");
             }
 
-            alert("Servicio actualizado exitosamente");
+            alert("Proyecto actualizado exitosamente");
             router.refresh();
             onClose();
         } catch (error) {
@@ -88,40 +92,49 @@ const EditForm = ({ onClose, Id }: Iprops) => {
 
     return (
         <FormContainer onSubmit={onSubmit(handleEdit)}>
-            <Title>Editar</Title>
+            <Title>Editar Proyecto</Title>
 
             {isLoading ? (
                 <Loading />
             ) : (
                 <>
-                    <FormField<IEditServiceRequest>
+                    <FormField<IEditProjectsRequest>
                         control={control}
                         type="text"
-                        name="name"
-                        label="Nombre del Servicio"
-                        error={errors.name}
-                        placeholder="Ingrese nombre del servicio"
+                        name="title"
+                        label="Título del Proyecto"
+                        error={errors.title}
+                        placeholder="Ingrese el título del proyecto"
                     />
 
-                    <FormField<IEditServiceRequest>
+                    <FormField<IEditProjectsRequest>
                         control={control}
                         type="text"
                         name="description"
                         label="Descripción"
                         error={errors.description}
-                        placeholder="Ingrese la descripción"
+                        placeholder="Ingrese la descripción del proyecto"
                     />
 
-                    <FormField<IEditServiceRequest>
+                    <FormField<IEditProjectsRequest>
                         control={control}
-                        type="number"
-                        name="price"
-                        label="Precio"
-                        error={errors.price}
-                        placeholder="Ingrese el precio"
+                        type="date"
+                        name="startDate"
+                        label="Fecha de Inicio"
+                        error={errors.startDate}
+                        placeholder="Seleccione la fecha de inicio"
                     />
 
-                    <Button type="submit" label="Actualizar Servicio" />
+                    <FormField<IEditProjectsRequest>
+                        control={control}
+                        type="date"
+                        name="endDate"
+                        label="Fecha de Finalización"
+                        error={errors.endDate}
+                        placeholder="Seleccione la fecha de finalización"
+                    />
+
+                    <Button type="submit" label="Actualizar Proyecto" />
                 </>
             )}
         </FormContainer>

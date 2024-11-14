@@ -29,5 +29,13 @@ export interface PProjects{
      */
 
     deleteProject(id:number): Promise<IDeleteProjectResponse>
+
+    /**
+     * Get a project by id
+     * @param {number} - project id
+     * @returns {Promise<IProjectResponse>} - project response
+     */
+
+    getProject(id: number): Promise<IProjectResponse>
     
 }   

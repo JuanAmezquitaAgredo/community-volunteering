@@ -9,7 +9,9 @@ import MainComponent from "@/ui/organisms/dashboard/projects";
 import { SearchComponent } from "@/ui/atoms/search";
 import { useState } from "react";
 import Modal from "@/ui/atoms/modal";
-import RegisterForm from "@/ui/organisms/formProjects/RegisterForm";
+import { useRouter } from "next/navigation";
+import EditForm from "@/ui/organisms/formProjects/EditForm";
+import Loading from "@/ui/atoms/loading";
 
 interface IProsp {
     totalProjects: number;
@@ -57,35 +59,70 @@ const Search = styled.div`
 
 export default function DashboardTemplate({ data, totalProjects, activeProjects, organizers }: IProsp) {
 
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
     const [ModalOpenEdit, setModalOpenEdit] = useState(false);
+    const [SelectIdEdit, setSelectIdEdit] = useState<number>(1);
 
     const toggleModalEdit = () => {
         setModalOpenEdit(!ModalOpenEdit);
     }
 
-    const handleEdit = (id: number) => {
-        console.log("Editando proyecto con id: ", id);
-    };
+    const handleEdit = (Id: number) => {
+        setSelectIdEdit(Id);
+        toggleModalEdit();
+    }
 
-    const handleDelete = (id: number) => {
-        console.log("Eliminando proyecto con id: ", id);
+    const handleDelete = async (Id: number) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/projects/delete/${Id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al eliminar el proyecto");
+            }
+
+            alert("Proyecto eliminado exitosamente");
+            router.refresh();
+            return await response.json();
+
+        } catch (error) {
+            console.error("Error en el DELETE:", error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <PageContainer>
-            <HeaderProjects>
-                <CartInfo title="Total Proyectos" icon={<FaRegFolderOpen size={20} />} body={totalProjects} />
-                <CartInfo title="Proyectos Activos" icon={<MdOutlineSignalCellularAlt size={20} />} body={activeProjects} />
-                <CartInfo title="Organizadores" icon={<SlPeople size={20} />} body={organizers} />
-                <CartInfo title="OProximo Proyecto" icon={<CiCalendar size={20} />} body="Invalid Date" />
-            </HeaderProjects>
-            <BodyProjects>
-                <H2>Lista de Proyectos</H2>
-                <Search>
-                    <SearchComponent />
-                </Search>
-                <MainComponent data={data} onEdit={handleEdit} onDelete={handleDelete} />
-            </BodyProjects>
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <>
+                    <HeaderProjects>
+                        <CartInfo title="Total Proyectos" icon={<FaRegFolderOpen size={20} />} body={totalProjects} />
+                        <CartInfo title="Proyectos Activos" icon={<MdOutlineSignalCellularAlt size={20} />} body={activeProjects} />
+                        <CartInfo title="Organizadores" icon={<SlPeople size={20} />} body={organizers} />
+                        <CartInfo title="OProximo Proyecto" icon={<CiCalendar size={20} />} body="Invalid Date" />
+                    </HeaderProjects>
+                    <BodyProjects>
+                        <H2>Lista de Proyectos</H2>
+                        <Search>
+                            <SearchComponent />
+                        </Search>
+                        <MainComponent data={data} onEdit={handleEdit} onDelete={(Id) => handleDelete(Id)} />
+                    </BodyProjects>
+                    <Modal isOpen={ModalOpenEdit} onClose={toggleModalEdit} title="Editar Servicio">
+                        <EditForm onClose={toggleModalEdit} Id={SelectIdEdit} />
+                    </Modal>
+                </>
+            )}
         </PageContainer>
     )
 }

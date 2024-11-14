@@ -39,3 +39,9 @@ interface IProjectsRequest{
     page: number;
     size: number;
 }
+
+interface IProjectResponse {
+    statusCode: number;
+    message: string;
+    data: EventData[];
+}
