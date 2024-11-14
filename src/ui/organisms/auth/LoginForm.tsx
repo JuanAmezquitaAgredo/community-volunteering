@@ -112,7 +112,7 @@ const LoginForm = () => {
                 return
             }
 
-            router.push("/dashboard/services");
+            router.push("/dashboard");
         } catch (error) {
             console.log(error);
         }
