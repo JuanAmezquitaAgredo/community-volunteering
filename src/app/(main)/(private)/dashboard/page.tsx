@@ -10,7 +10,6 @@ const useProjectService = new ProjectsServices();
 export default async function DashboardPage({ searchParams }: IProps) {
     const page = searchParams.page ? parseInt(searchParams.page.toString()) : 1;
     const data = await useProjectService.getProjects({page, size: 7});
-    console.log(data);
     
     const totalProjects = data.metadata.totalItems;
 

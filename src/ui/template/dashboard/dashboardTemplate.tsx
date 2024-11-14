@@ -7,6 +7,9 @@ import { CiCalendar } from "react-icons/ci";
 import styled from "styled-components";
 import MainComponent from "@/ui/organisms/dashboard/projects";
 import { SearchComponent } from "@/ui/atoms/search";
+import { useState } from "react";
+import Modal from "@/ui/atoms/modal";
+import RegisterForm from "@/ui/organisms/formProjects/RegisterForm";
 
 interface IProsp {
     totalProjects: number;
@@ -53,6 +56,13 @@ const Search = styled.div`
 `;
 
 export default function DashboardTemplate({ data, totalProjects, activeProjects, organizers }: IProsp) {
+
+    const [ModalOpenEdit, setModalOpenEdit] = useState(false);
+
+    const toggleModalEdit = () => {
+        setModalOpenEdit(!ModalOpenEdit);
+    }
+
     const handleEdit = (id: number) => {
         console.log("Editando proyecto con id: ", id);
     };

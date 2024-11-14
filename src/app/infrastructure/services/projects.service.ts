@@ -17,4 +17,14 @@ export class ProjectsServices implements PProjects{
             throw error;
           }
     }
+
+    async createProject(project: IRegisterProjectsRequest): Promise<IProjectsResponse>{
+       try {
+            const response = this.clientHttp.post<IProjectsResponse, IRegisterProjectsRequest>("projects", project);
+            return response;
+          } catch (error) {
+            console.log(error);
+            throw error;
+          }
+    }
 }

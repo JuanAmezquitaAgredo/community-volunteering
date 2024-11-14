@@ -7,6 +7,9 @@ import { CustomSession } from "@/app/api/auth";
 import { SlArrowDown } from "react-icons/sl";
 import { BiSolidReport } from "react-icons/bi";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import { useState } from "react";
+import Modal from "@/ui/atoms/modal";
+import RegisterForm from "../formProjects/RegisterForm";
 
 const Header = styled.header`
     background-color: white;
@@ -78,8 +81,18 @@ const PName = styled.p`
 `;
 
 export default function HeaderDashboard() {
+    const [ModalOpenRegister, setModalOpenRegister] = useState(false);
     const { data } = useSession();
     const session = data as CustomSession;
+
+    const toggleModalRegister = () => {
+        setModalOpenRegister(!ModalOpenRegister);
+    }
+
+    const handleAdd = () => {
+        toggleModalRegister();
+    }
+
     return (
         <Header>
             <Titles>
@@ -87,7 +100,7 @@ export default function HeaderDashboard() {
             </Titles>
             <Buttons>
                 <DownloadRport label='Descargar Reporte' icon={<BiSolidReport size={20}/>} />
-                <NewProyecto label="Nuevo proyecto" icon={<IoIosAddCircleOutline size={20}/>}/>
+                <NewProyecto label="Nuevo proyecto" icon={<IoIosAddCircleOutline size={20}/>} onClick={handleAdd}/>
                 <Profiler>
                     {session?.user?.photo ? (
                         <ProfileImage src={session.user.photo} alt="Profile Image" width={30} height={30} />
@@ -98,6 +111,9 @@ export default function HeaderDashboard() {
                     <SlArrowDown />
                 </Profiler>
             </Buttons>
+            <Modal isOpen={ModalOpenRegister} onClose={toggleModalRegister} title="Agregar Proyecto">
+                <RegisterForm onClose={toggleModalRegister} />
+            </Modal>
         </Header>
     )
 }

@@ -5,5 +5,13 @@ export interface PProjects{
      */
 
     getProjects({size, page}: IProjectsRequest): Promise<IProjectsResponse>
+
+    
+    /**
+     * create a new project
+     * @param {IRegisterProjectsRequest} - project request
+     * @returns {Promise<IProjectsResponse>} - project response
+     */
+    createProject(project: IRegisterProjectsRequest): Promise<IProjectsResponse>
     
 }   
