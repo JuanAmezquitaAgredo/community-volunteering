@@ -1,7 +1,7 @@
-import { RegisterService } from "@/app/infrastructure/services/register.service";
+import { UsersService } from "@/app/infrastructure/services/users.service";
 import { NextResponse } from "next/server";
 
-const useRegisterService = new RegisterService()
+const useRegisterService = new UsersService()
 export async function POST(req: Request) {
     try {
         const formData = await req.formData();  
