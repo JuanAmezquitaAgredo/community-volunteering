@@ -6,8 +6,8 @@ interface ButtonPagProps {
 }
 
 const Buttonpag = styled.button`
-    width: 30px;
-    height:40px;
+    width: 20px;
+    height:30px;
     margin: 0 7px;
     border-radius: 40%;
     background-color: rgb(243, 244, 246);
