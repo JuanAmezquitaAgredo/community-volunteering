@@ -19,16 +19,21 @@ export class HttpClient {
     this.baseUrl = baseUrl || defaultBaseUrl;
   }
 
-  async get<T>(url: string): Promise<T> {
+  async get<T = any>(url: string, isBinary: boolean = false): Promise<T> {
     const headers = await this.getHeader();
     const response = await fetch(`${this.baseUrl}/${url}`, {
       headers: headers,
       method: "GET",
       cache: "no-store",
     });
-
+  
+    if (isBinary) {
+      return response.arrayBuffer() as unknown as T;
+    }
+  
     return this.handleResponse(response);
   }
+  
 
   async post<T, B>(url: string, body: B, formData: boolean = false): Promise<T> {
     const headers = await this.getHeader(formData);

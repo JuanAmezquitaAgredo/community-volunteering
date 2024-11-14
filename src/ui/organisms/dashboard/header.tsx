@@ -93,13 +93,45 @@ export default function HeaderDashboard() {
         toggleModalRegister();
     }
 
+    const handleDownload = async () => {
+        try {
+            const response = await fetch(`/api/projects/report`, {
+                method: "GET",
+            });
+    
+            if (!response.ok) {
+                throw new Error("Error al descargar");
+            }
+    
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+    
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "reporte_proyectos.xlsx"); 
+            document.body.appendChild(link);
+            link.click();
+    
+            if (link.parentNode) {
+                link.parentNode.removeChild(link);
+            }
+            window.URL.revokeObjectURL(url);
+    
+            alert("Descarga completa");
+    
+        } catch (error) {
+            console.error("Error en la descarga:", error);
+            throw error;
+        }
+    };
+    
     return (
         <Header>
             <Titles>
                 <NameSection>Dashboard de Proyectos</NameSection>
             </Titles>
             <Buttons>
-                <DownloadRport label='Descargar Reporte' icon={<BiSolidReport size={20}/>} />
+                <DownloadRport label='Descargar Reporte' icon={<BiSolidReport size={20}/>} onClick={handleDownload}/>
                 <NewProyecto label="Nuevo proyecto" icon={<IoIosAddCircleOutline size={20}/>} onClick={handleAdd}/>
                 <Profiler>
                     {session?.user?.photo ? (

@@ -6,7 +6,12 @@ export interface PProjects{
 
     getProjects({size, page}: IProjectsRequest): Promise<IProjectsResponse>
 
-    
+    /**
+     * Get report
+     * @returns {Promise<ArrayBuffer>}Report response
+     */
+    getReport(): Promise<ArrayBuffer>
+
     /**
      * create a new project
      * @param {IRegisterProjectsRequest} - project request
