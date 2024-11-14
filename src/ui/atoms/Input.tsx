@@ -23,7 +23,7 @@ const StyledInput = styled.input<{ $error?: string }>`
   &:focus {
     outline: none;
     border-color: transparent;
-    box-shadow: 0 0 0 2px #D4AF37;
+    box-shadow: 0 0 0 2px #587affa7;
   }
 `;
 
